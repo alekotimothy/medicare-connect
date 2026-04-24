@@ -14,16 +14,173 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      orders: {
+        Row: {
+          created_at: string
+          delivered_at: string | null
+          delivery_address: string
+          delivery_date: string
+          delivery_time: string | null
+          driver_id: string | null
+          id: string
+          notes: string | null
+          out_for_delivery_at: string | null
+          patient_id: string
+          prescription_id: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          delivered_at?: string | null
+          delivery_address: string
+          delivery_date: string
+          delivery_time?: string | null
+          driver_id?: string | null
+          id?: string
+          notes?: string | null
+          out_for_delivery_at?: string | null
+          patient_id: string
+          prescription_id?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          delivered_at?: string | null
+          delivery_address?: string
+          delivery_date?: string
+          delivery_time?: string | null
+          driver_id?: string | null
+          id?: string
+          notes?: string | null
+          out_for_delivery_at?: string | null
+          patient_id?: string
+          prescription_id?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_prescription_id_fkey"
+            columns: ["prescription_id"]
+            isOneToOne: false
+            referencedRelation: "prescriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prescriptions: {
+        Row: {
+          created_at: string
+          dosage: string | null
+          duration_days: number
+          id: string
+          image_url: string | null
+          instructions: string | null
+          medication_name: string
+          ocr_text: string | null
+          patient_id: string
+        }
+        Insert: {
+          created_at?: string
+          dosage?: string | null
+          duration_days?: number
+          id?: string
+          image_url?: string | null
+          instructions?: string | null
+          medication_name: string
+          ocr_text?: string | null
+          patient_id: string
+        }
+        Update: {
+          created_at?: string
+          dosage?: string | null
+          duration_days?: number
+          id?: string
+          image_url?: string | null
+          instructions?: string | null
+          medication_name?: string
+          ocr_text?: string | null
+          patient_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          postal_code: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          postal_code?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          postal_code?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "patient" | "admin" | "driver"
+      order_status:
+        | "pending_verification"
+        | "verified"
+        | "out_for_delivery"
+        | "delivered"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +307,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["patient", "admin", "driver"],
+      order_status: [
+        "pending_verification",
+        "verified",
+        "out_for_delivery",
+        "delivered",
+        "cancelled",
+      ],
+    },
   },
 } as const
